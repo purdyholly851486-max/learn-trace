@@ -85,6 +85,14 @@ When enabled:
 - Cognitive Engine returns observation, evidence, session-level hypothesis, confidence, and intervention.
 - Concept Engine compares student claims against uploaded reference material and labels concepts as `correct`, `partial`, `incorrect`, `unclear`, or `not_observed`.
 
+## UI language, storage location, and Obsidian
+
+The UI has an EN / 中文 toggle (top right). The choice is remembered per browser.
+
+The Storage settings panel lets you pick where sessions are saved. Point it at a folder inside an Obsidian vault and every finished session writes an Obsidian-ready `report.md` (YAML frontmatter with `learn-trace` tags) plus `clean_transcript.md`. The setting persists in `settings.local.json` (git-ignored) and can be reset to the default `data/sessions/` from the same panel.
+
+Absolute paths may point anywhere on disk; relative paths must stay inside the project.
+
 ## Qwen3-ASR local
 
 On Apple Silicon, Learn Trace uses the community-maintained `mlx-qwen3-asr` runtime so inference runs through MLX/Metal instead of PyTorch. The model weights are the official `Qwen/Qwen3-ASR-0.6B` release.

@@ -16,6 +16,13 @@ button, input, select, textarea { font: inherit; }
 button { cursor: pointer; }
 .shell { width: min(1080px, calc(100% - 32px)); margin: 0 auto; padding: 48px 0 80px; }
 .hero { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; margin-bottom: 28px; }
+.hero-side { display: grid; gap: 10px; justify-items: end; }
+.lang-toggle { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; background: rgba(255,255,255,.65); }
+.lang-btn { border: 0; background: transparent; padding: 8px 14px; font-size: 12px; font-weight: 800; color: var(--muted); letter-spacing: .04em; }
+.lang-btn.active { background: var(--ink); color: #fff; }
+.settings-panel .step.gear { font-size: 16px; border-style: dashed; }
+.status-inline { font-size: 12px; }
+.small { font-size: 12px; word-break: break-all; margin: 4px 0 12px; }
 .eyebrow { font-size: 12px; letter-spacing: .14em; font-weight: 800; margin: 0 0 8px; }
 h1 { font-size: clamp(44px, 8vw, 86px); line-height: .92; margin: 0; letter-spacing: -.05em; }
 h2 { font-size: 24px; margin: 0 0 6px; }

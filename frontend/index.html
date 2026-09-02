@@ -10,25 +10,51 @@
   <main class="shell">
     <header class="hero">
       <div>
-        <p class="eyebrow">LOCAL-FIRST LEARNING DIAGNOSIS</p>
+        <p class="eyebrow" data-i18n="hero.eyebrow">LOCAL-FIRST LEARNING DIAGNOSIS</p>
         <h1>Learn Trace</h1>
-        <p class="subtitle">Capture a study session, ground it in your materials, and diagnose learning process plus concept precision.</p>
+        <p class="subtitle" data-i18n="hero.subtitle">Capture a study session, ground it in your materials, and diagnose learning process plus concept precision.</p>
       </div>
-      <div id="health" class="pill">Checking local service...</div>
+      <div class="hero-side">
+        <div class="lang-toggle" role="group" aria-label="Language">
+          <button id="langEn" class="lang-btn" type="button">EN</button>
+          <button id="langZh" class="lang-btn" type="button">中文</button>
+        </div>
+        <div id="health" class="pill" data-i18n="health.checking">Checking local service...</div>
+      </div>
     </header>
+
+    <section class="panel settings-panel">
+      <div class="section-title">
+        <span class="step gear">⚙</span>
+        <div>
+          <h2 data-i18n="settings.title">Storage settings</h2>
+          <p data-i18n="settings.desc">Choose where sessions, reference materials, transcripts and reports are saved. Point it at an Obsidian vault folder to open reports as notes.</p>
+        </div>
+      </div>
+      <label>
+        <span data-i18n="settings.dataDirLabel">Save location (absolute path recommended)</span>
+        <input id="dataDir" spellcheck="false" />
+      </label>
+      <p id="dataDirHint" class="muted mono small"></p>
+      <div class="row">
+        <button id="saveDataDir" class="secondary" data-i18n="settings.save">Save path</button>
+        <button id="resetDataDir" class="secondary" data-i18n="settings.reset">Reset to default</button>
+        <span id="settingsStatus" class="status-inline muted"></span>
+      </div>
+    </section>
 
     <section class="panel setup">
       <div class="section-title">
         <span class="step">01</span>
-        <div><h2>Session setup</h2><p>Create a local session and add reference material.</p></div>
+        <div><h2 data-i18n="setup.title">Session setup</h2><p data-i18n="setup.desc">Create a local session and add reference material.</p></div>
       </div>
-      <label>Session title<input id="title" value="CS336 learning session" /></label>
+      <label><span data-i18n="setup.titleLabel">Session title</span><input id="title" value="CS336 learning session" /></label>
       <div class="row">
-        <button id="createSession" class="secondary">Create session</button>
-        <span id="sessionId" class="mono muted">No session yet</span>
+        <button id="createSession" class="secondary" data-i18n="setup.create">Create session</button>
+        <span id="sessionId" class="mono muted"></span>
       </div>
       <label class="dropzone">
-        <span>Upload PDF / Markdown / TXT</span>
+        <span data-i18n="setup.dropzone">Upload PDF / Markdown / TXT</span>
         <input id="materials" type="file" accept=".pdf,.md,.markdown,.txt" multiple />
       </label>
       <div id="materialList" class="chips"></div>
@@ -37,28 +63,28 @@
     <section class="panel trace-panel">
       <div class="section-title">
         <span class="step">02</span>
-        <div><h2>Capture your learning trace</h2><p>Record your own explanations, questions, corrections, and uncertainty.</p></div>
+        <div><h2 data-i18n="trace.title">Capture your learning trace</h2><p data-i18n="trace.desc">Record your own explanations, questions, corrections, and uncertainty.</p></div>
       </div>
 
       <div class="recorder-wrap">
         <button id="recordButton" class="record-button" aria-label="Start recording">
           <span id="recordDot" class="record-dot"></span>
-          <span id="recordLabel">START TRACE</span>
+          <span id="recordLabel" data-i18n="trace.start">START TRACE</span>
         </button>
         <div id="timer" class="timer">00:00</div>
-        <p id="recordStatus" class="muted">Microphone is off.</p>
+        <p id="recordStatus" class="muted" data-i18n="trace.off">Microphone is off.</p>
       </div>
 
       <div class="split">
-        <label>ASR after stop
+        <label><span data-i18n="trace.asrLabel">ASR after stop</span>
           <select id="asrProvider">
-            <option value="manual">Manual transcript / no ASR model</option>
-            <option value="qwen_local">Qwen3-ASR local</option>
-            <option value="qwen_server">Qwen3-ASR server</option>
+            <option value="manual" data-i18n="trace.asrManual">Manual transcript / no ASR model</option>
+            <option value="qwen_local" data-i18n="trace.asrLocal">Qwen3-ASR local</option>
+            <option value="qwen_server" data-i18n="trace.asrServer">Qwen3-ASR server</option>
           </select>
         </label>
-        <label>Optional manual transcript
-          <textarea id="manualTranscript" rows="8" placeholder="Paste a transcript here to test the diagnosis pipeline without installing Qwen3-ASR."></textarea>
+        <label><span data-i18n="trace.manualLabel">Optional manual transcript</span>
+          <textarea id="manualTranscript" rows="8" data-i18n-placeholder="trace.manualPlaceholder" placeholder="Paste a transcript here to test the diagnosis pipeline without installing Qwen3-ASR."></textarea>
         </label>
       </div>
     </section>
@@ -66,35 +92,35 @@
     <section class="panel">
       <div class="section-title">
         <span class="step">03</span>
-        <div><h2>Generate diagnosis</h2><p>Cognitive analysis and concept grounding run as separate engines.</p></div>
+        <div><h2 data-i18n="diagnose.title">Generate diagnosis</h2><p data-i18n="diagnose.desc">Cognitive analysis and concept grounding run as separate engines.</p></div>
       </div>
-      <button id="finish" class="primary">END SESSION AND DIAGNOSE</button>
-      <div id="status" class="status muted">Ready.</div>
+      <button id="finish" class="primary" data-i18n="diagnose.button">END SESSION AND DIAGNOSE</button>
+      <div id="status" class="status muted" data-i18n="diagnose.ready">Ready.</div>
     </section>
 
     <section id="results" class="results hidden">
       <article class="panel result-card">
-        <p class="eyebrow">COGNITIVE ENGINE</p>
+        <p class="eyebrow" data-i18n="results.cognitive">COGNITIVE ENGINE</p>
         <h2 id="bottleneck">-</h2>
         <p id="observation"></p>
-        <div class="confidence"><span>Session confidence</span><strong id="confidence">-</strong></div>
-        <h3>Evidence</h3>
+        <div class="confidence"><span data-i18n="results.sessionConfidence">Session confidence</span><strong id="confidence">-</strong></div>
+        <h3 data-i18n="results.evidence">Evidence</h3>
         <div id="evidence"></div>
-        <h3>Intervention</h3>
+        <h3 data-i18n="results.intervention">Intervention</h3>
         <ul id="intervention"></ul>
       </article>
 
       <article class="panel result-card">
-        <p class="eyebrow">CONCEPT ENGINE</p>
-        <h2>Concept precision</h2>
+        <p class="eyebrow" data-i18n="results.concept">CONCEPT ENGINE</p>
+        <h2 data-i18n="results.conceptTitle">Concept precision</h2>
         <p id="conceptOverview"></p>
         <div id="concepts" class="concept-list"></div>
       </article>
 
       <article class="panel result-card full">
         <div class="row between">
-          <div><p class="eyebrow">OUTPUT</p><h2>Learning diagnosis report</h2></div>
-          <a id="downloadReport" class="secondary link-button" href="#">Download Markdown</a>
+          <div><p class="eyebrow" data-i18n="results.output">OUTPUT</p><h2 data-i18n="results.reportTitle">Learning diagnosis report</h2></div>
+          <a id="downloadReport" class="secondary link-button" href="#" data-i18n="results.download">Download Markdown</a>
         </div>
         <pre id="report"></pre>
       </article>

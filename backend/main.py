@@ -14,7 +14,15 @@ from backend.analysis.concept import analyze_concepts
 from backend.analysis.llm import OpenAICompatibleLLM
 from backend.analysis.materials import combine_materials
 from backend.asr.factory import build_asr
-from backend.config import CONFIG, ROOT
+from backend.config import (
+    CONFIG,
+    ROOT,
+    clear_user_setting,
+    load_user_settings,
+    normalize_data_dir,
+    resolve_data_dir,
+    save_user_settings,
+)
 from backend.report.markdown import build_markdown
 from backend.storage import (
     create_session,
@@ -40,6 +48,10 @@ class ManualTranscriptRequest(BaseModel):
     transcript: str
 
 
+class SettingsRequest(BaseModel):
+    data_dir: str | None = None
+
+
 class FinishRequest(BaseModel):
     asr_provider: Literal["manual", "qwen_local", "qwen_server"] | None = None
 
@@ -57,6 +69,41 @@ def health() -> dict:
         "version": "0.1.0",
         "default_asr": CONFIG.get("asr", {}).get("provider", "manual"),
         "llm_configured": llm.available,
+    }
+
+
+@app.get("/api/settings")
+def api_get_settings() -> dict:
+    return {
+        "data_dir": str(resolve_data_dir()),
+        "is_custom": bool(load_user_settings().get("data_dir")),
+    }
+
+
+@app.put("/api/settings")
+def api_update_settings(payload: SettingsRequest) -> dict:
+    if payload.data_dir is None:
+        clear_user_setting("data_dir")
+    else:
+        raw = payload.data_dir.strip()
+        if not raw:
+            raise HTTPException(status_code=400, detail="Data directory is empty")
+        path = normalize_data_dir(raw)
+        if path == Path(path.anchor):
+            raise HTTPException(status_code=400, detail="Refusing to use a filesystem root as data directory")
+        if not Path(raw).is_absolute() and ROOT not in path.resolve().parents:
+            raise HTTPException(
+                status_code=400,
+                detail="Relative paths must stay inside the project; use an absolute path for other locations",
+            )
+        try:
+            path.mkdir(parents=True, exist_ok=True)
+        except OSError as exc:
+            raise HTTPException(status_code=400, detail=f"Cannot create data directory: {exc}")
+        save_user_settings({"data_dir": str(path)})
+    return {
+        "data_dir": str(resolve_data_dir()),
+        "is_custom": bool(load_user_settings().get("data_dir")),
     }
 
 
@@ -168,7 +215,8 @@ def api_finish_session(session_id: str, payload: FinishRequest) -> dict:
         raise HTTPException(status_code=400, detail="No transcript or audio available")
 
     clean = clean_transcript(raw)
-    (path / "clean_transcript.md").write_text(clean, encoding="utf-8")
+    clean_doc = f"# {meta.get('title', 'Learning Session')} - Clean Transcript\n\n{clean}\n"
+    (path / "clean_transcript.md").write_text(clean_doc, encoding="utf-8")
 
     material_paths = [path / "materials" / name for name in meta.get("materials", [])]
     max_material = int(CONFIG.get("analysis", {}).get("max_material_chars", 18000))

@@ -3,6 +3,26 @@ from __future__ import annotations
 from typing import Any
 
 
+def _frontmatter_value(value: str) -> str:
+    return str(value).replace('"', "'")
+
+
+def _build_frontmatter(session: dict[str, Any], cognitive: dict[str, Any], concepts: dict[str, Any]) -> list[str]:
+    return [
+        "---",
+        f"title: \"{_frontmatter_value(session.get('title', 'Learning Session'))}\"",
+        f"session_id: \"{_frontmatter_value(session.get('id', ''))}\"",
+        f"created: \"{_frontmatter_value(session.get('created_at', ''))}\"",
+        f"cognitive_mode: \"{_frontmatter_value(cognitive.get('mode', 'unknown'))}\"",
+        f"concept_mode: \"{_frontmatter_value(concepts.get('mode', 'unknown'))}\"",
+        "tags:",
+        "  - learn-trace",
+        "  - learning-diagnosis",
+        "---",
+        "",
+    ]
+
+
 def _status_mark(status: str) -> str:
     return {
         "correct": "OK",
@@ -24,7 +44,8 @@ def build_markdown(
     concepts: dict[str, Any],
 ) -> str:
     primary = cognitive.get("primary_bottleneck", {})
-    lines = [
+    lines = _build_frontmatter(session, cognitive, concepts)
+    lines.extend([
         f"# Learn Trace - {session.get('title', 'Learning Session')}",
         "",
         f"- Session: `{session.get('id', '')}`",
@@ -44,7 +65,7 @@ def build_markdown(
         "",
         "### Evidence",
         "",
-    ]
+    ])
 
     evidence = primary.get("evidence", []) or []
     if evidence:

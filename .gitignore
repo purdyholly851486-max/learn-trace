@@ -2,5 +2,6 @@
 __pycache__/
 *.pyc
 .env
+settings.local.json
 data/sessions/*
 !data/sessions/.gitkeep

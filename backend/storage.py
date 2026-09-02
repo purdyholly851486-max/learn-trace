@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from backend.config import DATA_DIR
+from backend.config import ensure_data_dir, resolve_data_dir
 
 
 def _slug(value: str) -> str:
@@ -20,7 +20,7 @@ def _slug(value: str) -> str:
 def create_session(title: str) -> dict[str, Any]:
     now = datetime.now(timezone.utc)
     session_id = f"{now.strftime('%Y%m%d-%H%M%S')}-{_slug(title)}-{uuid.uuid4().hex[:6]}"
-    path = DATA_DIR / session_id
+    path = ensure_data_dir() / session_id
     (path / "materials").mkdir(parents=True, exist_ok=True)
     meta = {
         "id": session_id,
@@ -33,8 +33,13 @@ def create_session(title: str) -> dict[str, Any]:
     return meta
 
 
+_SESSION_ID_RX = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$")
+
+
 def session_path(session_id: str) -> Path:
-    path = DATA_DIR / session_id
+    if not _SESSION_ID_RX.match(session_id):
+        raise FileNotFoundError(session_id)
+    path = resolve_data_dir() / session_id
     if not path.exists() or not path.is_dir():
         raise FileNotFoundError(session_id)
     return path
