@@ -1,0 +1,17 @@
+app:
+  host: 127.0.0.1
+  port: 7860
+  data_dir: data/sessions
+asr:
+  provider: qwen_local
+  qwen_local:
+    model: /Users/os/Library/Mobile Documents/com~apple~CloudDocs/LearnTrace/models/Qwen3-ASR-0.6B
+    device: mlx
+    dtype: auto
+  qwen_server:
+    base_url: http://127.0.0.1:8000/v1
+    api_key: EMPTY
+analysis:
+  provider: auto
+  max_material_chars: 18000
+  max_transcript_chars: 18000

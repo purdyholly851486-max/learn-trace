@@ -1,0 +1,5 @@
+I think UTF-8 turns text into numbers. Wait, more precisely it turns Unicode characters into bytes. Why is the byte vocabulary 256 instead of 26? Because one byte has 8 bits and each bit has two states, so 2 to the 8 is 256. Then BPE finds frequent adjacent pairs and merges them.
+
+I am still mixing up byte values and token IDs. If I see 231, is that a token ID or a byte value? It depends on which stage I am looking at. I need to track the representation. A token ID like 426 is just an integer index. Then embedding 426 means, no, that wording is bad. The model uses token ID 426 to select row 426 from the embedding matrix. That row is a vector, not a probability.
+
+I understand one token can map to four embedding numbers, but if there are three tokens with four numbers each, why is that two dimensional? I guess the first axis is which token and the second axis is which feature, but I am not fully stable on what an axis means.
